@@ -1,18 +1,22 @@
 package handler
 
 import (
-	"github.com/Alzoww/url-shortener/internal/storage"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
 
-type Handler struct {
-	storage storage.Interface
+type URLServiceI interface {
+	URLSave(urlToSave, alias string) error
+	URLGet(alias string) (string, error)
 }
 
-func New(storage storage.Interface) *Handler {
+type Handler struct {
+	urlService URLServiceI
+}
+
+func New(urlService URLServiceI) *Handler {
 	return &Handler{
-		storage: storage,
+		urlService: urlService,
 	}
 }
 

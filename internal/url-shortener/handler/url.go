@@ -20,7 +20,7 @@ func (h *Handler) SaveURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.storage.SaveURL(req.URL, req.Alias); err != nil {
+	if err := h.urlService.URLSave(req.URL, req.Alias); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -39,7 +39,7 @@ func (h *Handler) GetURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	url, err := h.storage.GetURL(alias)
+	url, err := h.urlService.URLGet(alias)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

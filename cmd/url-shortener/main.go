@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"flag"
-	url_shortener "github.com/Alzoww/url-shortener"
+	urlshortener "github.com/Alzoww/url-shortener"
 	"github.com/Alzoww/url-shortener/config"
-	"github.com/Alzoww/url-shortener/internal/handler"
-	"github.com/Alzoww/url-shortener/internal/storage/sqlite"
+	"github.com/Alzoww/url-shortener/internal/url-shortener/handler"
+	"github.com/Alzoww/url-shortener/internal/url-shortener/service"
+	"github.com/Alzoww/url-shortener/internal/url-shortener/storage/sqlite"
 	"github.com/Alzoww/url-shortener/pkg/logger"
 	"github.com/Alzoww/url-shortener/pkg/logger/sl"
 	"log/slog"
@@ -39,9 +40,11 @@ func main() {
 		return
 	}
 
-	h := handler.New(storage)
+	urlService := service.NewUrlService(storage, ushConfig.Kafka)
 
-	server := new(url_shortener.Server)
+	h := handler.New(urlService)
+
+	server := new(urlshortener.Server)
 
 	go func() {
 		if err = server.Run(ushConfig.HttpServer, h.InitRoutes()); err != nil {
